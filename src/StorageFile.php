@@ -14,8 +14,6 @@ class StorageFile extends Model
 
     public function download(): void
     {
-        $data = (string) $this->data;
-
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
         header('Content-Disposition: attachment; filename="'.basename($this->path).'"');

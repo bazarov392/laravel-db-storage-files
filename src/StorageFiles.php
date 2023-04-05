@@ -18,12 +18,12 @@ final class StorageFiles
 
     public function containsPath(string $path): bool
     {
-        return (StorageFile::where('path', $path)->count() > 0) ? true : false;
+        return StorageFile::where('path', $path)->exists();
     }
 
     public function containsFileId(string $fileId): bool
     {
-        return (StorageFile::where('file_id', $fileId)->count() > 0) ? true : false;
+        return StorageFile::where('file_id', $fileId)->exists();
     }
 
     public function getFromPath(string $path): StorageFile|null
@@ -37,56 +37,38 @@ final class StorageFiles
     }
 
     public function write(string $path, string $contents, Carbon|null $deletionDate = null): StorageFile
-    {
-
-        $file = null;
-        if(StorageFile::where('path', $path)->count() > 0)
         {
-            $file = StorageFile::where('path', $path)->first();
-            $file->update([
-                'data' => $contents,
+            $file = StorageFile::updateOrCreate([
+                'path' => $path
+            ],
+            [
                 'size' => strlen($contents),
-                'hash' => hash('sha256', $contents),
+                'data' => $contents,
+                'hash' => hash('sha256', $contents, false),
                 'deletion_date' => $deletionDate
             ]);
+    
+            return $file;
         }
-        else
-        {
-
-            $file = StorageFile::create([
-                'path' => $path,
-                'size' => strlen($contents),
-                'data' => $contents,
-                'hash' => hash('sha256', $contents),
-                'deletion_date' => $deletionDate,
-            ]);
-        }
-
-        return $file;
-    }
 
     public function delete(StorageFile|string $pathOrModel): void
     {
-        if(is_string($pathOrModel))
+        if($pathOrModel instanceof StorageFile)
         {
-            $storage = StorageFile::where('path', $pathOrModel);
-            if($storage->count() > 0)
-            {
-                $storage->first()->delete();
-            }
+            $pathOrModel->delete();
         }
         else
         {
-            $pathOrModel->delete();
+            $query = StorageFile::where('path', $pathOrModel);
+            if($query->exists()) $query->delete();
         }
     }
 
     public function getList(string $path): array
     {
-        $query = StorageFile::select('path')->where('path', 'like', $path.'%');
-
-        return ($query->count() > 0)
-            ? $query->get()->map(fn (StorageFile $file) => $file->path)->toArray()
+        $query = StorageFile::where('path', 'like', $path.'%');
+        return ($query->exists())
+            ? $query->pluck('path')->toArray()
             : [];
     }
 }
