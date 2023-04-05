@@ -1,6 +1,7 @@
 ## File model
 
 The file model consists of
+* `file_id` - File ID in uuid format
 * `path` - Full path to the file
 * `size` - File size in bytes
 * `data` - File content
