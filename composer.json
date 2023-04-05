@@ -2,7 +2,7 @@
     "name": "bazarov392/laravel-db-storage-files",
     "description": "File storage inside Mysql database.",
     "keywords": ["db", "file-storage", "laravel", "php"],
-    "version": "1.0.2",
+    "version": "1.0.3",
     "license": "MIT",
     "support": {
         "source": "https://github.com/bazarov392/laravel-db-storage-files"
@@ -17,7 +17,10 @@
     "autoload": {
         "psr-4": {
             "Bazarov392\\": "src/"
-        }
+        },
+        "files": [
+            "src/helpers.php"
+        ]
     },
     "authors": [
         {
