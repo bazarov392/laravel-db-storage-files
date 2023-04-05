@@ -6,11 +6,11 @@
 ## Installion 
 
 Install package
-```{bash}
+```bash
 composer require bazarov392/laravel-db-storage-files
 ```
 Create a table with files in the database.
-```{bash}
+```bash
 php artisan migrate --path=/vendor/bazarov392/laravel-db-storage-files/migrations
 ```
 
