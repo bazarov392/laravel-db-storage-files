@@ -2,7 +2,7 @@
 
 namespace Bazarov392;
 
-use App\Models\StorageFile;
+use Bazarov392\StorageFile;
 use Carbon\Carbon;
 
 final class StorageFiles

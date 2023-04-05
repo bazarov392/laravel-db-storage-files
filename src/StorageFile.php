@@ -9,7 +9,6 @@ class StorageFile extends Model
 {
     use HasUuids;
 
-    
     protected $guarded = false;
     protected $primaryKey = 'file_id';
 
