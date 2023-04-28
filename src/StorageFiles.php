@@ -46,7 +46,7 @@ final class StorageFiles
             'data' => $contents,
             'hash' => hash('sha256', $contents, false),
             'deletion_date' => $deletionDate,
-            'info' => json_encode($info ?? [])
+            'info' => $info ?? []
         ]);
 
         return $file;
