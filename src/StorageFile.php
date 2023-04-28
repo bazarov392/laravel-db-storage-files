@@ -26,4 +26,14 @@ class StorageFile extends Model
         echo $this->data;
         exit;
     }
+
+    public function setInfoAttribute(array $info): void 
+    {
+        $this->attributes['info'] = json_encode($info);
+    }
+
+    public function getInfoAttribute($json): array 
+    {
+        return json_decode($json, true);
+    }
 }

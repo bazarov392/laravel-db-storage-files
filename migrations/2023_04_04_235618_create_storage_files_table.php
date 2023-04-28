@@ -18,6 +18,7 @@ return new class extends Migration
             $table->uuid('file_id');
             $table->string('path')->unique();
             $table->string('hash');
+            $table->json('info');
             $table->bigInteger('size');
             $table->timestamp('deletion_date')->nullable();
             $table->timestamps();

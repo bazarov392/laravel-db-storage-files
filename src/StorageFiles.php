@@ -36,20 +36,21 @@ final class StorageFiles
         return StorageFile::where('file_id', $fileId)->first();
     }
 
-    public function write(string $path, string $contents, Carbon|null $deletionDate = null): StorageFile
-        {
-            $file = StorageFile::updateOrCreate([
-                'path' => $path
-            ],
-            [
-                'size' => strlen($contents),
-                'data' => $contents,
-                'hash' => hash('sha256', $contents, false),
-                'deletion_date' => $deletionDate
-            ]);
-    
-            return $file;
-        }
+    public function write(string $path, string $contents, Carbon|null $deletionDate = null, ?array $info = null): StorageFile
+    {
+        $file = StorageFile::updateOrCreate([
+            'path' => $path
+        ],
+        [
+            'size' => strlen($contents),
+            'data' => $contents,
+            'hash' => hash('sha256', $contents, false),
+            'deletion_date' => $deletionDate,
+            'info' => json_encode($info ?? [])
+        ]);
+
+        return $file;
+    }
 
     public function delete(StorageFile|string $pathOrModel): void
     {
