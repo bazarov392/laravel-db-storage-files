@@ -150,7 +150,7 @@ final class StorageFiles
         else $current[] = $path; 
         }
 
-        return ['/' => $result['']];
+        return (count($result) > 0) ? ['/' => $result['']] : [];
     }
 
     public function reloadCache(): void
