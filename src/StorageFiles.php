@@ -150,25 +150,25 @@ final class StorageFiles
         else $current[] = $path; 
         }
 
-        return (count($result) > 0) ? ['/' => $result['']] : [];
+        return $result;
     }
 
     public function reloadCache(): void
     {
-        $result = $this->hierarchicalArray()['/'];
+        $result = $this->hierarchicalArray();
         $cache = $this->cacheFoldersContent($result, '');
         foreach($cache as $key => $value)
             Cache::put('dbf_'.$key, $value);
     }
 
-    private function cacheFoldersContent(array $folders, string $path, array &$cache = []): array
+    public function cacheFoldersContent(array $folders, string $path, array &$cache = []): array
     {
         foreach ($folders as $key => $value) {
             $currentPath = $path . '/' . $key;
             if (is_array($value)) {
                 $cache[$currentPath] =
                     array_map(fn ($item) => is_array($item) ? 'folder' : 'file', $value);
-                cacheFoldersContent($value, ($currentPath == '/' ? '' : $currentPath), $cache); // Рекурсивно кэшируем содержимое вложенных папок
+                $this->cacheFoldersContent($value, ($currentPath == '/' ? '' : $currentPath), $cache); // Рекурсивно кэшируем содержимое вложенных папок
             }
         }
         return $cache;
