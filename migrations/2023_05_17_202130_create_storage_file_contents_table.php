@@ -14,15 +14,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('storage_files', function (Blueprint $table) {
-            $table->uuid('file_id');
-            $table->string('path')->unique();
-            $table->string('hash');
-            $table->json('info');
-            $table->bigInteger('size');
-            $table->timestamp('deletion_date')->nullable();
-            $table->timestamps();
+        Schema::create('storage_file_contents', function (Blueprint $table) {
+            $table->uuid('file_id')->primary();
         });
+        DB::statement("ALTER TABLE storage_file_contents ADD data LONGBLOB");
     }
 
     /**
@@ -32,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('storage_files');
+        Schema::dropIfExists('storage_file_contents');
     }
 };

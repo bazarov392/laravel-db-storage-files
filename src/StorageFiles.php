@@ -21,6 +21,7 @@ final class StorageFiles
             {
                 $this->deleteFromCache($file->path);
                 $file->delete();
+                StorageFileContents::where('file_id', $file->file_id)->delete();
             }
         }
     }
@@ -53,10 +54,16 @@ final class StorageFiles
         ],
         [
             'size' => strlen($contents),
-            'data' => $contents,
             'hash' => hash('sha256', $contents, false),
             'deletion_date' => $deletionDate,
             'info' => $info ?? []
+        ]);
+
+        StorageFileContents::updateOrCreate([
+            'file_id' => $file->file_id
+        ],
+        [
+            'data' => $contents
         ]);
 
         return $file;
@@ -68,12 +75,18 @@ final class StorageFiles
         {
             $this->deleteFromCache($pathOrModel->path);
             $pathOrModel->delete();
+            StorageFileContents::where('file_id', $pathOrModel->file_id)->delete();
         }
         else
         {
             $this->deleteFromCache($pathOrModel);
             $query = StorageFile::where('path', $pathOrModel);
-            if($query->exists()) $query->delete();
+            if($query->exists()) 
+            {
+                $fileId = $query->value('file_id');
+                $query->delete();
+                StorageFileContents::where('file_id', $fileId)->delete();
+            }
         }
     }
 
