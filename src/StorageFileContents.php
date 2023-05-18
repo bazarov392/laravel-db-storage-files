@@ -9,4 +9,5 @@ class StorageFileContents extends Model
 {
     protected $guarded = false;
     protected $primaryKey = 'file_id';
+    public $timestamps = false;
 }

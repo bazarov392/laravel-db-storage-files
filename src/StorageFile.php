@@ -4,6 +4,7 @@ namespace Bazarov392;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Bazarov392\StorageFileContents;
 
 class StorageFile extends Model
 {
@@ -11,6 +12,15 @@ class StorageFile extends Model
 
     protected $guarded = false;
     protected $primaryKey = 'file_id';
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($file) {
+            StorageFileContents::where('file_id', $file->file_id)->delete();
+        });
+    }
 
     public function download(): void
     {
